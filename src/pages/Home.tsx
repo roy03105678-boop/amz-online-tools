@@ -20,9 +20,9 @@ export default function Home({ tools }: { tools: Tool[] }) {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">欢迎使用亚马逊卖家工具箱</h2>
+        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">欢迎使用亚马逊新卖家工具箱</h2>
         <p className="mt-2 text-lg text-gray-600">
-          专为亚马逊卖家设计，即用即走。帮助您解决成本核算、Listing优化、时间管理等高频痛点。
+          专为新卖家设计，无需API授权，即用即走。帮助您解决成本核算、Listing优化、时间管理等高频痛点。
         </p>
       </div>
 

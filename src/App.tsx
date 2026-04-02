@@ -237,7 +237,7 @@ function Layout() {
             >
               <Menu className="w-6 h-6" />
             </button>
-            <h1 className="text-lg font-semibold text-gray-900 hidden sm:block">亚马逊卖家工具箱</h1>
+            <h1 className="text-lg font-semibold text-gray-900 hidden sm:block">亚马逊新卖家工具箱</h1>
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-sm text-gray-500">
