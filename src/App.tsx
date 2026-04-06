@@ -28,10 +28,12 @@ import {
   X
 } from 'lucide-react';
 import { useState } from 'react';
+import { useBookmarks } from './lib/useBookmarks';
 import { cn } from './lib/utils';
 
 // Tool Components
 import Home from './pages/Home';
+import Bookmarks from './pages/Bookmarks';
 import FBACalculator from './pages/FBACalculator';
 import PricingCalculator from './pages/PricingCalculator';
 import TimezoneConverter from './pages/TimezoneConverter';
@@ -89,6 +91,7 @@ const TOOLS = [
 
 function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolean) => void }) {
   const location = useLocation();
+  const { bookmarks } = useBookmarks();
 
   return (
     <>
@@ -116,6 +119,31 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolea
         </div>
 
         <div className="flex-1 overflow-y-auto py-4">
+          {/* 收藏链接 */}
+          <nav className="space-y-1 px-2 mb-6">
+            <Link
+              to="/bookmarks"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "flex items-center px-3 py-2 text-sm font-medium rounded-md group",
+                location.pathname === '/bookmarks'
+                  ? "bg-red-50 text-red-700"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+              )}
+            >
+              <Star className={cn(
+                "mr-3 flex-shrink-0 h-5 w-5",
+                location.pathname === '/bookmarks' ? "text-red-600 fill-red-600" : "text-gray-400 group-hover:text-gray-500"
+              )} />
+              <span>我的收藏</span>
+              {bookmarks.size > 0 && (
+                <span className="ml-auto inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold">
+                  {bookmarks.size}
+                </span>
+              )}
+            </Link>
+          </nav>
+
           <div className="px-3 mb-2">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">核心生存工具</p>
           </div>
@@ -250,6 +278,7 @@ function Layout() {
           <div className="max-w-5xl mx-auto">
             <Routes>
               <Route path="/" element={<Home tools={TOOLS} />} />
+              <Route path="/bookmarks" element={<Bookmarks tools={TOOLS} />} />
               <Route path="/fba-calculator" element={<FBACalculator />} />
               <Route path="/pricing-calculator" element={<PricingCalculator />} />
               <Route path="/acos-calculator" element={<ACoSCalculator />} />
