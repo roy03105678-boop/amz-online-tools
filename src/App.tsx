@@ -297,8 +297,13 @@ function Layout() {
                   }
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && searchQuery.trim() && location.pathname !== '/') {
-                    navigate(`/?q=${encodeURIComponent(searchQuery)}`);
+                  if (e.key === 'Enter') {
+                    const val = searchQuery.trim();
+                    if (location.pathname !== '/') {
+                      navigate(val ? `/?q=${encodeURIComponent(val)}` : '/');
+                    } else if (!val) {
+                      navigate('/');
+                    }
                   }
                 }}
                 className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
