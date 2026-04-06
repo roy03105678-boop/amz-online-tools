@@ -5,6 +5,7 @@ import {
   Globe, 
   Calendar, 
   CheckSquare, 
+  Search,
   Search as SearchIcon, 
   Languages, 
   FileText, 
@@ -260,9 +261,9 @@ function Layout() {
 
   // 同步 URL 参数到搜索框
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const q = params.get('q');
-    if (q) setSearchQuery(q);
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q') || '';
+    setSearchQuery(q);
   }, [location.search]);
 
   return (
@@ -293,7 +294,14 @@ function Layout() {
                   const val = e.target.value;
                   setSearchQuery(val);
                   if (location.pathname === '/') {
-                    navigate(val ? `/?q=${encodeURIComponent(val)}` : '/', { replace: true });
+                    const params = new URLSearchParams(location.search);
+                    if (val) {
+                      params.set('q', val);
+                    } else {
+                      params.delete('q');
+                    }
+                    const search = params.toString();
+                    navigate(search ? `/?${search}` : '/', { replace: true });
                   }
                 }}
                 onKeyDown={(e) => {
