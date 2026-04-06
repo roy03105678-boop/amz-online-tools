@@ -18,10 +18,10 @@ export default function Translation() {
     try {
       const apiKey = ((import.meta as any).env?.VITE_GEMINI_API_KEY) || process.env.GEMINI_API_KEY;
       if (!apiKey) {
-        throw new Error('未配置 Gemini API Key');
+        throw new Error('翻译服务暂时不可用，请稍后再试。');
       }
 
-      const ai = new GoogleGenAI({ apiKey });
+      const service = new GoogleGenAI({ apiKey });
       
       const langMap: Record<string, string> = {
         'en': '英语 (English)',
@@ -31,7 +31,7 @@ export default function Translation() {
         'ja': '日语 (Japanese)'
       };
 
-      const prompt = `你是一个专业的亚马逊电商翻译专家。请将以下文本翻译成${langMap[targetLang]}。
+      const config = `你是一个专业的亚马逊电商翻译专家。请将以下文本翻译成${langMap[targetLang]}。
 要求：
 1. 符合亚马逊当地站点的电商表达习惯。
 2. 保持原有的排版格式。
@@ -41,14 +41,14 @@ export default function Translation() {
 待翻译文本：
 ${sourceText}`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: prompt,
+      const response = await service.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: config,
       });
 
       setTranslatedText(response.text || '翻译失败，请重试。');
     } catch (err: any) {
-      console.error('Translation error:', err);
+      console.error('Service error:', err);
       setError(err.message || '翻译过程中发生错误，请稍后重试。');
       setTranslatedText('');
     } finally {
@@ -96,7 +96,7 @@ ${sourceText}`;
                 disabled={!sourceText.trim() || isTranslating}
                 className="flex items-center px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-md hover:bg-teal-700 disabled:bg-teal-300"
               >
-                {isTranslating ? '翻译中...' : '翻译'}
+                {isTranslating ? '处理中...' : '执行翻译'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </button>
             </div>
