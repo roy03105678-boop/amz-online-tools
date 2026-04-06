@@ -9,9 +9,7 @@ interface Tool {
   priority: number;
 }
 
-import { useMemo } from 'react';
-
-export default function Home({ tools, searchQuery = '' }: { tools: Tool[], searchQuery?: string }) {
+export default function Home({ tools }: { tools: Tool[] }) {
   const categories = [
     { id: 1, name: '核心生存工具', desc: '解决盈利验证与基础运营痛点' },
     { id: 2, name: 'Listing优化', desc: '提升曝光与转化，避免违规' },
@@ -19,50 +17,42 @@ export default function Home({ tools, searchQuery = '' }: { tools: Tool[], searc
     { id: 4, name: '增值服务', desc: '补充次要需求，提升体验' },
   ];
 
-  const filteredTools = useMemo(() => {
-    if (!searchQuery.trim()) return tools;
-    return tools.filter(tool => 
-      tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [tools, searchQuery]);
-
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl transition-colors">欢迎使用亚马逊卖家工具箱</h2>
-        <p className="mt-2 text-lg text-gray-600 dark:text-gray-400 transition-colors">
+        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">欢迎使用亚马逊卖家工具箱</h2>
+        <p className="mt-2 text-lg text-gray-600">
           专为卖家设计，无需API授权，即用即走。帮助您解决成本核算、Listing优化、时间管理等高频痛点。
         </p>
       </div>
 
       <div className="space-y-10">
         {categories.map(category => {
-          const categoryTools = filteredTools.filter(t => t.priority === category.id);
+          const categoryTools = tools.filter(t => t.priority === category.id);
           if (categoryTools.length === 0) return null;
-          
+
           return (
             <div key={category.id}>
               <div className="mb-4">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 transition-colors">{category.name}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors">{category.desc}</p>
+                <h3 className="text-lg font-medium text-gray-900">{category.name}</h3>
+                <p className="text-sm text-gray-500">{category.desc}</p>
               </div>
-              
+
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {categoryTools.map((tool) => (
                   <Link
                     key={tool.id}
                     to={tool.path}
-                    className="relative flex items-center space-x-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all"
+                    className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:border-blue-400 hover:shadow-md transition-all"
                   >
                     <div className="flex-shrink-0">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">
-                        <tool.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
+                        <tool.icon className="h-6 w-6 text-blue-600" aria-hidden="true" />
                       </div>
                     </div>
                     <div className="min-w-0 flex-1">
                       <span className="absolute inset-0" aria-hidden="true" />
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 transition-colors">{tool.name}</p>
+                      <p className="text-sm font-medium text-gray-900">{tool.name}</p>
                     </div>
                   </Link>
                 ))}
@@ -70,11 +60,6 @@ export default function Home({ tools, searchQuery = '' }: { tools: Tool[], searc
             </div>
           );
         })}
-        {filteredTools.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400">未找到与 "{searchQuery}" 相关的工具</p>
-          </div>
-        )}
       </div>
     </div>
   );
