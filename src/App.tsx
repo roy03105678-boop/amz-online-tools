@@ -5,7 +5,7 @@ import {
   Globe, 
   Calendar, 
   CheckSquare, 
-  Search, 
+  Search as SearchIcon, 
   Languages, 
   FileText, 
   ListChecks, 
@@ -25,10 +25,12 @@ import {
   Mail,
   BarChart2,
   Menu,
-  X
+  X,
+  Heart
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useBookmarks } from './lib/useBookmarks';
+import { useNavigate } from 'react-router-dom';
 import { cn } from './lib/utils';
 
 // Tool Components
@@ -251,26 +253,62 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolea
 
 function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  const { bookmarks } = useBookmarks();
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 lg:px-8 justify-between">
-          <div className="flex items-center">
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 lg:px-8 justify-between gap-4">
+          <div className="flex items-center min-w-0">
             <button
-              className="lg:hidden mr-4 text-gray-500 hover:text-gray-700"
+              className="lg:hidden mr-4 text-gray-500 hover:text-gray-700 flex-shrink-0"
               onClick={() => setSidebarOpen(true)}
             >
               <Menu className="w-6 h-6" />
             </button>
-            <h1 className="text-lg font-semibold text-gray-900 hidden sm:block">亚马逊卖家工具箱</h1>
+            <h1 className="text-lg font-semibold text-gray-900 hidden sm:block whitespace-nowrap">亚马逊卖家工具箱</h1>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-500">
+          
+          {/* 搜索框 */}
+          <div className="flex-1 max-w-md hidden sm:block">
+            <div className="relative">
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="搜索工具..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    navigate('/');
+                  }
+                }}
+                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 lg:space-x-4 flex-shrink-0">
+            <div className="text-xs lg:text-sm text-gray-500 hidden lg:block whitespace-nowrap">
               无需注册 · 即用即走
             </div>
+            {/* 收藏按钮 */}
+            <button
+              onClick={() => navigate('/bookmarks')}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors relative group"
+              aria-label="我的收藏"
+            >
+              <Heart className="w-5 h-5 text-gray-600 group-hover:text-red-500 transition-colors" />
+              {bookmarks.size > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold">
+                  {bookmarks.size}
+                </span>
+              )}
+            </button>
           </div>
         </header>
 

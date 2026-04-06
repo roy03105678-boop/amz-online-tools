@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { LucideIcon, Heart, Search as SearchIcon } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { LucideIcon, Heart } from 'lucide-react';
+import { useMemo } from 'react';
 import { useBookmarks } from '../lib/useBookmarks';
 
 interface Tool {
@@ -12,8 +12,8 @@ interface Tool {
 }
 
 export default function Home({ tools }: { tools: Tool[] }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showBookmarksOnly, setShowBookmarksOnly] = useState(false);
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
   const { isBookmarked, toggleBookmark } = useBookmarks();
 
   const categories = [
@@ -23,26 +23,13 @@ export default function Home({ tools }: { tools: Tool[] }) {
     { id: 4, name: '增值服务', desc: '补充次要需求，提升体验' },
   ];
 
-  // 过滤工具：先按搜索词，再按收藏状态
+  // 过滤工具：按搜索词
   const filteredTools = useMemo(() => {
-    let result = tools;
-
-    // 按搜索词过滤
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(t => t.name.toLowerCase().includes(query));
-    }
-
-    // 按收藏状态过滤
-    if (showBookmarksOnly) {
-      result = result.filter(t => isBookmarked(t.id));
-    }
-
-    return result;
-  }, [searchQuery, showBookmarksOnly, tools, isBookmarked]);
-
-  // 统计收藏数量
-  const bookmarkCount = tools.filter(t => isBookmarked(t.id)).length;
+    if (!searchQuery.trim()) return tools;
+    
+    const query = searchQuery.toLowerCase();
+    return tools.filter(t => t.name.toLowerCase().includes(query));
+  }, [searchQuery, tools]);
 
   return (
     <div className="space-y-8">
@@ -54,53 +41,19 @@ export default function Home({ tools }: { tools: Tool[] }) {
         </p>
       </div>
 
-      {/* 搜索和过滤栏 */}
-      <div className="space-y-3">
-        <div className="relative">
-          <SearchIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="搜索工具..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        {/* 收藏过滤按钮 */}
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setShowBookmarksOnly(!showBookmarksOnly)}
-            className={`inline-flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-              showBookmarksOnly
-                ? 'bg-red-50 text-red-700 border border-red-200'
-                : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
-            }`}
-          >
-            <Heart className={`h-4 w-4 ${showBookmarksOnly ? 'fill-current' : ''}`} />
-            <span>我的收藏</span>
-            {bookmarkCount > 0 && (
-              <span className="ml-1 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold">
-                {bookmarkCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
-
       {/* 搜索结果提示 */}
       {searchQuery.trim() && (
-        <div className="text-sm text-gray-600">
-          找到 <span className="font-semibold">{filteredTools.length}</span> 个匹配的工具
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p className="text-sm text-blue-800">
+            搜索结果：找到 <span className="font-semibold">{filteredTools.length}</span> 个匹配的工具
+          </p>
         </div>
       )}
 
       {/* 工具列表 */}
       {filteredTools.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
-            {showBookmarksOnly ? '您还没有收藏任何工具' : '未找到匹配的工具'}
-          </p>
+          <p className="text-gray-500 text-lg">未找到匹配的工具</p>
         </div>
       ) : (
         <div className="space-y-10">
@@ -123,7 +76,10 @@ export default function Home({ tools }: { tools: Tool[] }) {
                     >
                       {/* 收藏按钮 */}
                       <button
-                        onClick={() => toggleBookmark(tool.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleBookmark(tool.id);
+                        }}
                         className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
                         aria-label={isBookmarked(tool.id) ? '取消收藏' : '收藏'}
                       >

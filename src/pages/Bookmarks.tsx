@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LucideIcon, Heart, ArrowLeft } from 'lucide-react';
+import { LucideIcon, Heart } from 'lucide-react';
 import { useBookmarks } from '../lib/useBookmarks';
 
 interface Tool {
@@ -27,30 +27,23 @@ export default function Bookmarks({ tools }: { tools: Tool[] }) {
     <div className="space-y-8">
       {/* 头部 */}
       <div>
-        <Link
-          to="/"
-          className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>返回首页</span>
-        </Link>
-        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl flex items-center space-x-2">
+        <div className="flex items-center space-x-3 mb-2">
           <Heart className="h-8 w-8 text-red-500 fill-red-500" />
-          <span>我的收藏</span>
-        </h2>
-        <p className="mt-2 text-lg text-gray-600">
+          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">我的收藏</h2>
+        </div>
+        <p className="text-lg text-gray-600">
           共收藏了 <span className="font-semibold text-blue-600">{bookmarkedTools.length}</span> 个工具
         </p>
       </div>
 
       {/* 收藏列表 */}
       {bookmarkedTools.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <div className="text-center py-16 bg-gray-50 rounded-lg border border-gray-200">
           <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">您还没有收藏任何工具</p>
+          <p className="text-gray-500 text-lg mb-4">您还没有收藏任何工具</p>
           <Link
             to="/"
-            className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
             去收藏工具
           </Link>
@@ -76,7 +69,10 @@ export default function Bookmarks({ tools }: { tools: Tool[] }) {
                     >
                       {/* 取消收藏按钮 */}
                       <button
-                        onClick={() => toggleBookmark(tool.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleBookmark(tool.id);
+                        }}
                         className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
                         aria-label="取消收藏"
                       >
