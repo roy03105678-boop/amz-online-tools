@@ -12,7 +12,7 @@ interface Tool {
 }
 
 export default function Home({ tools }: { tools: Tool[] }) {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const { isBookmarked, toggleBookmark } = useBookmarks();
 

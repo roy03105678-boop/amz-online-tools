@@ -28,7 +28,7 @@ import {
   X,
   Heart
 } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useBookmarks } from './lib/useBookmarks';
 import { useNavigate } from 'react-router-dom';
 import { cn } from './lib/utils';
@@ -256,6 +256,14 @@ function Layout() {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { bookmarks } = useBookmarks();
+  const location = useLocation();
+
+  // 同步 URL 参数到搜索框
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) setSearchQuery(q);
+  }, [location.search]);
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans">
@@ -281,10 +289,16 @@ function Layout() {
                 type="text"
                 placeholder="搜索工具..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSearchQuery(val);
+                  if (location.pathname === '/') {
+                    navigate(val ? `/?q=${encodeURIComponent(val)}` : '/', { replace: true });
+                  }
+                }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && searchQuery.trim()) {
-                    navigate('/');
+                  if (e.key === 'Enter' && searchQuery.trim() && location.pathname !== '/') {
+                    navigate(`/?q=${encodeURIComponent(searchQuery)}`);
                   }
                 }}
                 className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
