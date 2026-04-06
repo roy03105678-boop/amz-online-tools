@@ -10,14 +10,42 @@
   --foreground: #111827;
 }
 
+/* 强制在 .dark 类下应用暗黑模式变量 */
 .dark {
   --background: #111827;
   --foreground: #f9fafb;
 }
 
+/* 基础样式 */
 body {
   background-color: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* 确保暗黑模式下的背景和文字颜色正确覆盖 */
+.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* 针对特定组件的暗黑模式增强 */
+.dark .bg-white {
+  background-color: #1f2937 !important; /* gray-800 */
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+.dark .text-gray-600 {
+  color: #d1d5db !important; /* gray-300 */
+}
+
+.dark .border-gray-200 {
+  border-color: #374151 !important; /* gray-700 */
+}
+
+.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
