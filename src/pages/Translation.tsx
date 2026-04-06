@@ -18,8 +18,7 @@ export default function Translation() {
     try {
       const apiKey = ((import.meta as any).env?.VITE_GEMINI_API_KEY) || process.env.GEMINI_API_KEY;
       if (!apiKey) {
-        //throw new Error('未配置 Gemini API Key');
-        throw new Error('正在开发中，敬请期待！');
+        throw new Error('未配置 Gemini API Key');
       }
 
       const ai = new GoogleGenAI({ apiKey });

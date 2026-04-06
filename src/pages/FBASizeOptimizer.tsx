@@ -78,7 +78,7 @@ export default function FBASizeOptimizer() {
             FBA 尺寸分段优化器
           </h2>
           <p className="mt-1 text-sm text-gray-500">
-            智能判断 FBA 尺寸分段，提示包装压缩空间，帮您节省运费。
+            自动判断 FBA 尺寸分段，提示包装压缩空间，帮您节省运费。
           </p>
         </div>
       </div>
