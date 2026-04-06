@@ -152,7 +152,7 @@ export default function PricingCalculator() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">目标利润率 (%)</label>
                 <input type="number" min="0" max="99" step="1" value={targetMargin} onChange={(e) => setTargetMargin(Number(e.target.value))} className="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2" />
-                <p className="mt-2 text-xs text-gray-500">建议新卖家目标利润率设定在 25% - 35% 之间。</p>
+                <p className="mt-2 text-xs text-gray-500">建议卖家目标利润率设定在 25% - 35% 之间。</p>
               </div>
             ) : (
               <div>

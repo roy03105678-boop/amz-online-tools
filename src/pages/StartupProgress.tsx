@@ -71,7 +71,7 @@ export default function StartupProgress() {
         <div>
           <h2 className="text-2xl font-bold text-gray-900 flex items-center">
             <Map className="w-6 h-6 mr-2 text-blue-600" />
-            新卖家开店进度表
+            卖家开店进度表
           </h2>
           <p className="mt-1 text-sm text-gray-500">
             引导完成亚马逊开店全流程，明确各步骤所需材料。
